@@ -1,10 +1,11 @@
 import { site } from '../data/site.js'
+import { withBase } from '../utils/paths'
 import './hero.css'
 
 export default function Hero() {
   return (
     <header className="hero" id="top">
-      <img className="hero__bg" src="/hero.png" alt="" />
+      <img className="hero__bg" src={withBase('hero.png')} alt="" />
       <div className="hero__scrim" />
 
       <div className="hero__content wrap">
