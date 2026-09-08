@@ -5,7 +5,7 @@ en GitHub Pages con GitHub Actions.
 
 ## URLs en producción
 
-⚠️ Este repo se llama `Introduccion-a-SinergIA`, así que GitHub Pages **siempre**
+Este repo se llama `Introduccion-a-SinergIA`, así que GitHub Pages **siempre**
 sirve el sitio bajo esa subruta — nunca en la raíz de `sinergia-iesa.github.io`.
 Esto no es configurable desde el código: así funciona GitHub Pages para
 cualquier repo de proyecto que no se llame exactamente `sinergia-iesa.github.io`.
