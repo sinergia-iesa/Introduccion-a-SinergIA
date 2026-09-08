@@ -27,10 +27,8 @@ themeConfig:
   Presiona espacio para avanzar <carbon:arrow-right />
 </div>
 
-<div class="abs-br m-10 flex items-end gap-6">
-  <img src="/logos/ucr.png" class="h-10 opacity-95" />
-  <img src="/logos/sa-cie.png" class="h-8 opacity-95" />
-  <img src="/logos/carrera-cie.png" class="h-8 opacity-95" />
+<div class="abs-br m-10">
+  <img src="/logos/footer-logos.png" class="h-10 opacity-95" />
 </div>
 
 ---
