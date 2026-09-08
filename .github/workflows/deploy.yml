@@ -1,4 +1,4 @@
-name: Deploy site
+name: Desplegar portal a GitHub Pages
 
 on:
   push:
@@ -10,96 +10,50 @@ permissions:
   pages: write
   id-token: write
 
+# Evita despliegues encimados si hacés push varias veces seguidas
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  # Descubre automáticamente cada carpeta dentro de presentations/*
-  # así no hay que editar este archivo cada vez que se agrega una presentación.
-  discover:
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      slugs: ${{ steps.list.outputs.slugs }}
     steps:
-      - uses: actions/checkout@v4
-      - id: list
-        run: |
-          slugs=$(ls presentations | jq -R -s -c 'split("\n")[:-1]')
-          echo "slugs=$slugs" >> "$GITHUB_OUTPUT"
+      - name: Descargar código
+        uses: actions/checkout@v4
 
-  build-presentations:
-    needs: discover
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        slug: ${{ fromJson(needs.discover.outputs.slugs) }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Configurar Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci --ignore-scripts
-      - name: Build ${{ matrix.slug }}
-        working-directory: presentations/${{ matrix.slug }}
-        run: npx slidev build --base "/${{ github.event.repository.name }}/presentations/${{ matrix.slug }}/" --out dist
-      - uses: actions/upload-artifact@v4
-        with:
-          name: presentation-${{ matrix.slug }}
-          path: presentations/${{ matrix.slug }}/dist
 
-  build-portal:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Instalar dependencias
+        run: npm ci --ignore-scripts
+
+      # --base tiene que ser "/<nombre-del-repo>/" para que funcione bajo
+      # https://<usuario>.github.io/<nombre-del-repo>/ (así es como sirve
+      # GitHub Pages cualquier repo de proyecto). Se arma solo a partir del
+      # nombre real del repo, así que no hay que tocar esta línea si algún
+      # día lo renombrás.
+      - name: Compilar portal
+        run: npm run build --workspace app -- --base "/${{ github.event.repository.name }}/"
+
+      - name: Preparar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto
+        uses: actions/upload-pages-artifact@v3
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci --ignore-scripts
-      - name: Build portal
-        working-directory: app
-        env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: npm run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: portal
           path: app/dist
 
-  assemble-and-deploy:
-    needs: [build-presentations, build-portal]
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download portal
-        uses: actions/download-artifact@v4
-        with:
-          name: portal
-          path: site
-
-      - name: Download all presentations
-        uses: actions/download-artifact@v4
-        with:
-          pattern: presentation-*
-          path: site/presentations
-          merge-multiple: false
-
-      # Cada presentación se descarga como site/presentations/presentation-<slug>/...
-      # la renombramos a site/presentations/<slug>/ para que coincida con la URL.
-      - name: Rename presentation folders
-        run: |
-          cd site/presentations
-          for d in presentation-*; do
-            mv "$d" "${d#presentation-}"
-          done
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-      - id: deployment
+      - name: Desplegar a GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
