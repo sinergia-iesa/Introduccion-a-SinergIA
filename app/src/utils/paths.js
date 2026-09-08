@@ -1,6 +1,6 @@
 // Vite resuelve `import.meta.env.BASE_URL` a partir del `base` configurado en
 // vite.config.js (que en producción llega como VITE_BASE_PATH desde el
-// workflow, ej. "/Introduccion-a-SinergIA/", y en local es simplemente "/").
+// workflow, ej. "/sinergia-site/", y en local es simplemente "/").
 //
 // Cualquier href o src que apunte a algo dentro del sitio (imágenes propias,
 // rutas a otras presentaciones, etc.) debe pasar por acá en vez de escribirse

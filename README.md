@@ -5,82 +5,66 @@ en GitHub Pages con GitHub Actions.
 
 ## URLs en producción
 
-Este repo se llama `Introduccion-a-SinergIA`, así que GitHub Pages **siempre**
-sirve el sitio bajo esa subruta — nunca en la raíz de `sinergia-iesa.github.io`.
+Este repo se llama `sinergia-site`, así que GitHub Pages **siempre** sirve
+el sitio bajo esa subruta — nunca en la raíz de `sinergia-iesa.github.io`.
 Esto no es configurable desde el código: así funciona GitHub Pages para
 cualquier repo de proyecto que no se llame exactamente `sinergia-iesa.github.io`.
 
-- Portal: https://sinergia-iesa.github.io/Introduccion-a-SinergIA/
-- Presentación "Configuración del entorno de Python":
-  https://sinergia-iesa.github.io/Introduccion-a-SinergIA/presentations/preparacion-ambiente/
-
-Si algún día quieren una URL sin el nombre del repo (ej. directo en
-`sinergia-iesa.github.io/`), la única forma es renombrar este repositorio a
-`sinergia-iesa.github.io`, convirtiéndolo en el sitio de usuario/organización
-de GitHub — pero eso implica que solo puede haber **un** sitio así por cuenta
-(no podrían tener otro repo con Pages aparte de este).
+- Portal: https://sinergia-iesa.github.io/sinergia-site/
 
 ## Estructura
 
 ```
-presentation-site/
-├── app/                      → portal React (hero, quiénes somos, catálogo)
-│   ├── public/
-│   │   └── hero.png          → fondo del hero (reemplázalo a tu gusto)
-│   └── src/
-│       ├── data/
-│       │   ├── site.js       → nombre del proyecto, textos del hero y "quiénes somos"
-│       │   └── presentations.js → lista de presentaciones (el orden aquí = el orden visible)
-│       └── components/
-│           ├── Hero.jsx
-│           ├── AboutUs.jsx
-│           └── PresentationsSection.jsx
-│
-├── presentations/
-│   └── preparacion-ambiente/ → una presentación Slidev independiente
-│       └── public/
-│           └── portada.png   → fondo de la portada de esa presentación
-│
-└── .github/workflows/deploy.yml
+sinergia-site/
+└── app/                      → portal React (hero, quiénes somos, catálogo)
+    ├── public/
+    │   ├── hero.png          → fondo del hero (reemplázalo a tu gusto)
+    │   └── thumbnails/       → miniaturas, organizadas igual que la jerarquía
+    │       └── <tema>/<subtema>/<subtema-del-subtema>.png
+    └── src/
+        ├── data/
+        │   ├── site.js       → nombre del proyecto, textos del hero y "quiénes somos"
+        │   └── topics.js     → árbol tema → subtema → subtema (el orden aquí = el orden visible)
+        └── components/
+            ├── Hero.jsx
+            ├── AboutUs.jsx
+            ├── TopicsSection.jsx → busca y renderiza el árbol completo
+            └── TopicNode.jsx     → un solo componente recursivo para tema/subtema/subtema
 ```
+
+**Importante** este repo **no** contiene ninguna
+presentación**. Cada presentación es su propio repositorio (con su propio
+`slides.md` y su propio GitHub Action que la despliega por separado, como
+`preparacion-ambiente`). Acá en el portal solo se guarda, a mano, el
+**link** hacia cada presentación ya publicada.
 
 ## Cómo correr en local
 
 ```bash
-npm install --ignore-scripts   # una sola instalación para todo el workspace
-npm run dev                    # portal en http://localhost:5173
+npm install --ignore-scripts
+npm run dev   # portal en http://localhost:5173
 ```
 
-Para correr una presentación individual:
+Para correr una presentación en local, entra a su propio repo (ej.
+`preparacion-ambiente`) y corre `npm run dev` ahí — ver el README de ese
+repo.
 
-```bash
-cd presentations/preparacion-ambiente
-npx slidev --open
-```
+## Agregar una nueva presentación (o tema/subtema)
 
-## Agregar una nueva presentación
+Las presentaciones viven en repos aparte, ya desplegados con su propio
+GitHub Action. Acá en el portal solo se edita `app/src/data/topics.js`:
 
-1. Crea `presentations/<slug>/` con su `slides.md` (puedes copiar la
-   estructura de `preparacion-ambiente/` como plantilla).
-2. Agrega una entrada en `app/src/data/presentations.js` con el mismo `slug`.
-3. Agrega una miniatura en `app/public/thumbnails/<slug>.png` (opcional).
-4. Haz commit y push a `main` — GitHub Actions detecta la carpeta nueva
-   automáticamente y la construye sin tocar el workflow.
+1. Ubica (o crea) el tema/subtema donde va, dentro del arreglo `subtopics`
+   que le corresponde en `app/src/data/topics.js`.
+2. Agrega el objeto del nuevo nodo con su `link` apuntando a la URL ya
+   publicada de esa presentación (el repo aparte, desplegado con su propio
+   Action).
+3. (opcional) Agrega su miniatura en
+   `app/public/thumbnails/<tema>/<subtema>/.../archivo.png` — la ruta de
+   carpetas debe reflejar dónde quedó el nodo en la jerarquía — y referéncia
+   esa ruta en el campo `thumbnail`.
+4. Haz commit y push a `main`.
 
-## Imágenes pendientes de reemplazar
-
-- `app/public/hero.png` — fondo del hero de la página principal.
-- `presentations/preparacion-ambiente/public/portada.png` — fondo de la
-  portada de esa presentación (la diapositiva ya está configurada para usarla).
-
-Ambas están de momento como placeholders con gradiente en los tonos celeste
-del proyecto, solo para que nada se vea roto mientras las reemplazas.
-
-## Pendiente / decisiones a confirmar
-
-- El nombre del proyecto en el hero está como `"Sinergia"` en
-  `app/src/data/site.js` — es un placeholder, cámbialo por el nombre real.
-- El `base` de cada build (portal y presentaciones) se pasa en el workflow
-  como `/<nombre-del-repo>/`, así que **no hace falta editarlo a mano**: solo
-  asegúrate de que el repo en GitHub se llame como esperas, o ajusta esa línea
-  en `deploy.yml` si prefieres una ruta distinta.
+`topics.js` trae comentarios y un ejemplo de plantilla para cada nivel
+(tema, subtema, subtema de subtema) — solo hay que copiar el objeto y
+llenarlo.

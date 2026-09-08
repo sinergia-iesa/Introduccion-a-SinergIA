@@ -1,23 +1,23 @@
-// Textos generales del sitio. Cambia aquí el nombre del proyecto, el
+// Textos generales del sitio. Se cambia aquí el nombre del proyecto, el
 // eslogan del hero y el contenido de "Quiénes somos" sin tocar componentes.
 
 export const site = {
-  name: 'Sinerg[IA]²', // TODO: confirmar/ajustar el nombre real del proyecto
+  name: 'Sinerg[IA]²',
   tagline: 'Presentaciones de la Carrera de Informática Empresarial',
   heroSubtitle:
-    'Un solo lugar para consultar el material de clase: instalación de herramientas, arquitectura de proyectos y todo lo que se presenta en el curso.',
+    'Sitio para consultar los proyectos y guías de Sinerg[IA]²: instalación de herramientas, arquitectura de proyectos, entre otros...',
 }
 
 export const about = {
   title: 'Quiénes somos',
   intro:
-    'Somos parte de la Carrera de Informática Empresarial de la Sede del Atlántico, Universidad de Costa Rica.',
+    'Somos parte de "" de la Sede del Atlántico, Universidad de Costa Rica.',
   blocks: [
     {
-      heading: 'Material construido para el curso',
+      heading: 'Material construido para los interesados',
       text:
-        'Cada presentación nace de una clase real: instalación de herramientas, arquitectura de proyectos, buenas prácticas. Nada genérico, todo pensado para lo que se necesita resolver en el semestre.',
-      image: '/thumbnails/preparacion-ambiente.png',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt non risus eu hendrerit. Praesent ut dolor mauris. Proin sed finibus augue. Suspendisse pellentesque bibendum finibus. Praesent sit amet feugiat massa. Etiam cursus est in vehicula commodo. Nunc eget dui nisl. Donec ante nibh, scelerisque ac quam molestie, dapibus commodo lacus. Aenean tempor sollicitudin metus nec tempus. Sed id est imperdiet, vestibulum ligula ac, dignissim sem. Quisque viverra, velit ac lacinia sodales, turpis dolor blandit metus, a semper lorem enim ac massa. Nam varius cursus lacus, eu hendrerit sapien euismod vitae. Donec nibh sem, molestie sit amet imperdiet.',
+      image: '/thumbnails/introduccion/preparacion-ambiente/preparacion-ambiente.png',
     },
   ],
   stats: [
