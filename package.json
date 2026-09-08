@@ -1,0 +1,14 @@
+{
+  "name": "presentation-site",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "app",
+    "presentations/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace app",
+    "build:app": "npm run build --workspace app",
+    "dev:presentation": "npm run dev --workspace"
+  }
+}
